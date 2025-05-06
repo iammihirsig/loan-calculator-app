@@ -13,21 +13,24 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from '@mui/material';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import CalculateIcon from '@mui/icons-material/Calculate';
 
 function Home() {
-  // State for input fields
   const [loanAmount, setLoanAmount] = useState('');
   const [interestRate, setInterestRate] = useState('');
   const [loanTerm, setLoanTerm] = useState('');
-  // State for results
   const [emi, setEmi] = useState(null);
   const [totalInterest, setTotalInterest] = useState(null);
   const [totalAmount, setTotalAmount] = useState(null);
-  // State for amortization schedule
   const [amortizationSchedule, setAmortizationSchedule] = useState([]);
 
-  // Calculate EMI and amortization schedule
   const calculateEmi = () => {
     const principal = parseFloat(loanAmount);
     const annualRate = parseFloat(interestRate);
@@ -54,7 +57,6 @@ function Home() {
     setTotalInterest(totalInterestValue.toFixed(2));
     setTotalAmount(totalPayment.toFixed(2));
 
-    // Calculate amortization schedule
     let balance = principal;
     const schedule = [];
     for (let month = 1; month <= months; month++) {
@@ -73,123 +75,164 @@ function Home() {
     setAmortizationSchedule(schedule);
   };
 
-  // Handle form submission on button click
   const handleSubmit = (e) => {
     e.preventDefault();
     calculateEmi();
   };
 
   return (
-    <Container sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Loan Calculator
-      </Typography>
-      <Grid container spacing={3}>
-        {/* Input Form */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Enter Loan Details
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit}>
-              <TextField
-                label="Loan Amount"
-                type="number"
-                value={loanAmount}
-                onChange={(e) => setLoanAmount(e.target.value)}
-                fullWidth
-                margin="normal"
-                required
-              />
-              <TextField
-                label="Annual Interest Rate (%)"
-                type="number"
-                value={interestRate}
-                onChange={(e) => setInterestRate(e.target.value)}
-                fullWidth
-                margin="normal"
-                required
-              />
-              <TextField
-                label="Loan Term (Years)"
-                type="number"
-                value={loanTerm}
-                onChange={(e) => setLoanTerm(e.target.value)}
-                fullWidth
-                margin="normal"
-                required
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                sx={{ mt: 2 }}
-              >
-                Calculate
-              </Button>
-            </Box>
-          </Paper>
-        </Grid>
-
-        {/* Results Section */}
-        <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Results
-            </Typography>
-            {emi ? (
-              <>
-                <Typography>
-                  Monthly EMI: <strong>${emi}</strong>
-                </Typography>
-                <Typography>
-                  Total Interest: <strong>${totalInterest}</strong>
-                </Typography>
-                <Typography>
-                  Total Amount: <strong>${totalAmount}</strong>
-                </Typography>
-              </>
-            ) : (
-              <Typography>No results yet. Please enter loan details and calculate.</Typography>
-            )}
-          </Paper>
-        </Grid>
-
-        {/* Amortization Schedule */}
-        {amortizationSchedule.length > 0 && (
-          <Grid item xs={12}>
-            <Paper sx={{ p: 3, mt: 3 }}>
+    <Container
+      sx={{
+        minHeight: 'calc(100vh - 64px)', // Adjust for AppBar height
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: amortizationSchedule.length > 0 ? 'flex-start' : 'center',
+        alignItems: 'center',
+        py: 3,
+      }}
+    >
+      <Box sx={{ width: '100%', maxWidth: '800px', mb: amortizationSchedule.length > 0 ? 3 : 0 }}>
+        <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
+          Loan Calculator
+        </Typography>
+        <Grid container spacing={2} sx={{ alignItems: 'stretch' }}>
+          {/* Input Form */}
+          <Grid item xs={12} sm={6}>
+            <Paper sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Typography variant="h6" gutterBottom>
-                Amortization Schedule
+                Enter Loan Details
               </Typography>
-              <TableContainer sx={{ maxHeight: 400 }}>
-                <Table stickyHeader>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Month</TableCell>
-                      <TableCell>Payment</TableCell>
-                      <TableCell>Principal</TableCell>
-                      <TableCell>Interest</TableCell>
-                      <TableCell>Balance</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {amortizationSchedule.map((row) => (
-                      <TableRow key={row.month}>
-                        <TableCell>{row.month}</TableCell>
-                        <TableCell>${row.payment}</TableCell>
-                        <TableCell>${row.principal}</TableCell>
-                        <TableCell>${row.interest}</TableCell>
-                        <TableCell>${row.balance}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <Box component="form" onSubmit={handleSubmit} sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                <TextField
+                  label="Loan Amount"
+                  type="number"
+                  value={loanAmount}
+                  onChange={(e) => setLoanAmount(e.target.value)}
+                  fullWidth
+                  margin="dense"
+                  required
+                  variant="filled"
+                />
+                <TextField
+                  label="Annual Interest Rate (%)"
+                  type="number"
+                  value={interestRate}
+                  onChange={(e) => setInterestRate(e.target.value)}
+                  fullWidth
+                  margin="dense"
+                  required
+                  variant="filled"
+                />
+                <TextField
+                  label="Loan Term (Years)"
+                  type="number"
+                  value={loanTerm}
+                  onChange={(e) => setLoanTerm(e.target.value)}
+                  fullWidth
+                  margin="dense"
+                  required
+                  variant="filled"
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  sx={{ mt: 'auto', width: '100%' }}
+                >
+                  Calculate
+                </Button>
+              </Box>
             </Paper>
           </Grid>
-        )}
-      </Grid>
+
+          {/* Results Section */}
+          <Grid item xs={12} sm={6}>
+            <Paper sx={{ p: 2, height: '100%' }}>
+              <Typography variant="h6" gutterBottom>
+                Results
+              </Typography>
+              {emi ? (
+                <List dense>
+                  <ListItem>
+                    <ListItemIcon>
+                      <MonetizationOnIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`Monthly EMI: $${emi}`}
+                      primaryTypographyProps={{ fontWeight: 'bold' }}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <CalculateIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`Total Interest: $${totalInterest}`}
+                      primaryTypographyProps={{ fontWeight: 'bold' }}
+                    />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemIcon>
+                      <AccountBalanceIcon color="primary" />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={`Total Amount: $${totalAmount}`}
+                      primaryTypographyProps={{ fontWeight: 'bold' }}
+                    />
+                  </ListItem>
+                </List>
+              ) : (
+                <Typography variant="body2" color="textSecondary">
+                  No results yet. Please enter loan details and calculate.
+                </Typography>
+              )}
+            </Paper>
+          </Grid>
+        </Grid>
+      </Box>
+
+      {/* Amortization Schedule */}
+      {amortizationSchedule.length > 0 && (
+        <Box sx={{ width: '60vw', maxWidth: '100%', mx: 'auto', mt: 2 }}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Amortization Schedule
+            </Typography>
+            <TableContainer sx={{ maxHeight: 400 }}>
+              <Table stickyHeader>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Month</TableCell>
+                    <TableCell>Payment</TableCell>
+                    <TableCell>Principal</TableCell>
+                    <TableCell>Interest</TableCell>
+                    <TableCell>Balance</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {amortizationSchedule.map((row, index) => (
+                    <TableRow
+                      key={row.month}
+                      sx={{
+                        backgroundColor:
+                          index % 2 === 0
+                            ? 'background.paper'
+                            : 'background.default',
+                      }}
+                    >
+                      <TableCell>{row.month}</TableCell>
+                      <TableCell>${row.payment}</TableCell>
+                      <TableCell>${row.principal}</TableCell>
+                      <TableCell>${row.interest}</TableCell>
+                      <TableCell>${row.balance}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </Box>
+      )}
     </Container>
   );
 }

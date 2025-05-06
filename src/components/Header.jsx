@@ -12,7 +12,6 @@ import {
   ListItem,
   ListItemText,
   Box,
-  Switch,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -36,11 +35,12 @@ function Header() {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
+    { name: 'Error', path: '/error' }, // Added Error page link
   ];
 
   const drawerList = (
     <Box
-      sx={{ width: 250 }}
+      sx={{ width: 250, bgcolor: 'background.paper' }}
       role="presentation"
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}
@@ -53,8 +53,16 @@ function Header() {
             component={Link}
             to={link.path}
             sx={{
+              py: 1.5,
+              borderRadius: '8px',
+              mx: 1,
+              my: 0.5,
               backgroundColor:
-                location.pathname === link.path ? 'action.selected' : 'inherit',
+                location.pathname === link.path
+                  ? mode === 'light'
+                    ? 'rgba(0, 0, 0, 0.1)'
+                    : 'rgba(255, 255, 255, 0.1)'
+                  : 'inherit',
             }}
           >
             <ListItemText primary={link.name} />
@@ -65,7 +73,7 @@ function Header() {
   );
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{}}>
       <Toolbar>
         {/* Logo/Title */}
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -82,8 +90,19 @@ function Header() {
               to={link.path}
               sx={{
                 mx: 1,
+                borderRadius: '12px',
                 backgroundColor:
-                  location.pathname === link.path ? 'rgba(255, 255, 255, 0.1)' : 'inherit',
+                  location.pathname === link.path
+                    ? mode === 'light'
+                      ? 'rgba(0, 0, 0, 0.1)'
+                      : 'rgba(255, 255, 255, 0.1)'
+                    : 'inherit',
+                '&:hover': {
+                  backgroundColor:
+                    mode === 'light'
+                      ? 'rgba(0, 0, 0, 0.15)'
+                      : 'rgba(255, 255, 255, 0.15)',
+                },
               }}
             >
               {link.name}

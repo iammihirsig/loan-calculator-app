@@ -3,11 +3,11 @@ import { Container, Typography, Paper, Box } from '@mui/material';
 
 function About() {
   return (
-    <Container sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>
+    <Container sx={{ py: 4, maxWidth: 'md' }}>
+      <Typography variant="h4" gutterBottom sx={{ textAlign: 'center' }}>
         About
       </Typography>
-      <Paper sx={{ p: 3 }}>
+      <Paper sx={{ p: 4 }}>
         <Typography variant="body1" paragraph>
           This Loan Calculator application helps you calculate your monthly EMI, total interest, and total amount payable for a loan. It also provides an amortization schedule to see the breakdown of your payments over time. The app supports light and dark modes for better usability and is built using modern web technologies like React and Material UI.
         </Typography>
