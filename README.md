@@ -2,9 +2,9 @@
 
 Hey there! 👋 Welcome to the Loan Calculator App, a simple yet powerful tool to calculate your loan payments, view amortization schedules, and convert amounts into different currencies using live exchange rates. Whether you're planning a loan or just curious about exchange rates, this app has got you covered. It’s built with **React**, **Material-UI**, and **Vite**, and it’s deployed live on **GitHub Pages** for you to try out!
 
-## 🌟 Live Deployment
+## 🚨 Live Deployment
 
-You can check out the app in action here: 👉 [Loan Calculator Live Demo](https://iammihirsig.github.io/loan-calculator/)
+🚨 You can check out the app in action here: 👉 [Loan Calculator Live Demo](https://iammihirsig.github.io/loan-calculator-app/#/home)
 
 ---
 
