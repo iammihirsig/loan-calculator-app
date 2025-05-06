@@ -38,11 +38,12 @@ function App() {
           <ErrorBoundary>
             <Header />
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/error" element={<Error />} />
-              <Route path="/rates" element={<Rates />} />
-              <Route path="*" element={<Error />} />
+              <Route path="/loan-calculator-app/home" element={<Home />} />
+              <Route path="/loan-calculator-app/about" element={<About />} />
+              <Route path="/loan-calculator-app/error" element={<Error />} />
+              <Route path="/loan-calculator-app/rates" element={<Rates />} />
+              {/* Wildcard fallback for any invalid path under the base */}
+              <Route path="/loan-calculator-app/*" element={<Error />} />
             </Routes>
           </ErrorBoundary>
         </Router>
