@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContext';
 
 function Error() {
-  return <div>Error Page - 404 Not Found</div>;
+  const { mode } = useContext(ThemeContext);
+  return <div>Error Page - 404 Not Found (Mode: {mode})</div>;
 }
 
 export default Error;

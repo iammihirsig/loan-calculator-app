@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ThemeContext } from '../context/ThemeContext';
 
 function Home() {
-  return <div>Home Page - Loan Calculator</div>;
+  const { mode } = useContext(ThemeContext);
+  return <div>Home Page - Loan Calculator (Mode: {mode})</div>;
 }
 
 export default Home;
