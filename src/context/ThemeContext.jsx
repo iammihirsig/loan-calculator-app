@@ -41,7 +41,6 @@ export function ThemeContextProvider({ children }) {
               }),
         },
         components: {
-          // Customize TextField
           MuiTextField: {
             styleOverrides: {
               root: {
@@ -61,7 +60,6 @@ export function ThemeContextProvider({ children }) {
               },
             },
           },
-          // Customize Button
           MuiButton: {
             styleOverrides: {
               root: {
@@ -81,7 +79,6 @@ export function ThemeContextProvider({ children }) {
               },
             },
           },
-          // Customize Paper (for cards)
           MuiPaper: {
             styleOverrides: {
               root: {
@@ -93,7 +90,6 @@ export function ThemeContextProvider({ children }) {
               },
             },
           },
-          // Customize Table
           MuiTableCell: {
             styleOverrides: {
               head: {

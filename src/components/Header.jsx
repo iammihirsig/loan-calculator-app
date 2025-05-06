@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ThemeContext } from '../context/ThemeContext';
+import { CurrencyContext } from '../App';
 import {
   AppBar,
   Toolbar,
@@ -19,6 +20,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 function Header() {
   const { mode, toggleTheme } = useContext(ThemeContext);
+  const { selectedCurrency, exchangeRates } = useContext(CurrencyContext);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const location = useLocation();
 
@@ -35,7 +37,8 @@ function Header() {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
-    { name: 'Error', path: '/error' }, // Added Error page link
+    { name: 'Rates', path: '/rates' }, // Added Rates page link
+    { name: 'Error', path: '/error' },
   ];
 
   const drawerList = (
@@ -72,12 +75,22 @@ function Header() {
     </Box>
   );
 
+  // Calculate exchange rate display
+  const exchangeRate = exchangeRates[selectedCurrency]
+    ? (1 / exchangeRates[selectedCurrency]).toFixed(4)
+    : 'N/A';
+
   return (
     <AppBar position="static" sx={{}}>
       <Toolbar>
         {/* Logo/Title */}
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Loan Calculator
+        </Typography>
+
+        {/* Exchange Rate Display */}
+        <Typography variant="body2" sx={{ mr: 2, display: { xs: 'none', md: 'block' } }}>
+          1 {selectedCurrency} = {(exchangeRates[selectedCurrency] || 1).toFixed(4)} USD
         </Typography>
 
         {/* Desktop Navigation */}

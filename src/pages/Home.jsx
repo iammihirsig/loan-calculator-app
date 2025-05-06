@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Container,
   Typography,
@@ -17,12 +17,18 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import { CurrencyContext } from '../App';
 
 function Home() {
+  const { selectedCurrency, setSelectedCurrency, exchangeRates } = useContext(CurrencyContext);
   const [loanAmount, setLoanAmount] = useState('');
   const [interestRate, setInterestRate] = useState('');
   const [loanTerm, setLoanTerm] = useState('');
@@ -30,6 +36,8 @@ function Home() {
   const [totalInterest, setTotalInterest] = useState(null);
   const [totalAmount, setTotalAmount] = useState(null);
   const [amortizationSchedule, setAmortizationSchedule] = useState([]);
+
+  const currencies = ['USD', 'EUR', 'INR', 'GBP', 'JPY', 'AUD', 'CAD'];
 
   const calculateEmi = () => {
     const principal = parseFloat(loanAmount);
@@ -80,10 +88,27 @@ function Home() {
     calculateEmi();
   };
 
+  const resetTable = () => {
+    setAmortizationSchedule([]);
+    setEmi(null);
+    setTotalInterest(null);
+    setTotalAmount(null);
+    setLoanAmount('');
+    setInterestRate('');
+    setLoanTerm('');
+  };
+
+  // Convert amount from USD to selected currency
+  const convertToCurrency = (amount) => {
+    if (!exchangeRates[selectedCurrency] || selectedCurrency === 'USD') return parseFloat(amount).toFixed(2);
+    const rate = exchangeRates[selectedCurrency];
+    return (parseFloat(amount) * rate).toFixed(2);
+  };
+
   return (
     <Container
       sx={{
-        minHeight: 'calc(100vh - 64px)', // Adjust for AppBar height
+        minHeight: 'calc(100vh - 64px)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: amortizationSchedule.length > 0 ? 'flex-start' : 'center',
@@ -95,6 +120,26 @@ function Home() {
         <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', mb: 3 }}>
           Loan Calculator
         </Typography>
+
+        {/* Currency Dropdown */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          <FormControl sx={{ minWidth: 120 }}>
+            <InputLabel id="currency-select-label">Currency</InputLabel>
+            <Select
+              labelId="currency-select-label"
+              value={selectedCurrency}
+              label="Currency"
+              onChange={(e) => setSelectedCurrency(e.target.value)}
+            >
+              {currencies.map((currency) => (
+                <MenuItem key={currency} value={currency}>
+                  {currency}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+
         <Grid container spacing={2} sx={{ alignItems: 'stretch' }}>
           {/* Input Form */}
           <Grid item xs={12} sm={6}>
@@ -158,7 +203,7 @@ function Home() {
                       <MonetizationOnIcon color="primary" />
                     </ListItemIcon>
                     <ListItemText
-                      primary={`Monthly EMI: $${emi}`}
+                      primary={`Monthly EMI: ${convertToCurrency(emi)} ${selectedCurrency}`}
                       primaryTypographyProps={{ fontWeight: 'bold' }}
                     />
                   </ListItem>
@@ -167,7 +212,7 @@ function Home() {
                       <CalculateIcon color="primary" />
                     </ListItemIcon>
                     <ListItemText
-                      primary={`Total Interest: $${totalInterest}`}
+                      primary={`Total Interest: ${convertToCurrency(totalInterest)} ${selectedCurrency}`}
                       primaryTypographyProps={{ fontWeight: 'bold' }}
                     />
                   </ListItem>
@@ -176,7 +221,7 @@ function Home() {
                       <AccountBalanceIcon color="primary" />
                     </ListItemIcon>
                     <ListItemText
-                      primary={`Total Amount: $${totalAmount}`}
+                      primary={`Total Amount: ${convertToCurrency(totalAmount)} ${selectedCurrency}`}
                       primaryTypographyProps={{ fontWeight: 'bold' }}
                     />
                   </ListItem>
@@ -195,18 +240,23 @@ function Home() {
       {amortizationSchedule.length > 0 && (
         <Box sx={{ width: '60vw', maxWidth: '100%', mx: 'auto', mt: 2 }}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              Amortization Schedule
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6">
+                Amortization Schedule
+              </Typography>
+              <Button variant="outlined" color="secondary" onClick={resetTable}>
+                Reset Table
+              </Button>
+            </Box>
             <TableContainer sx={{ maxHeight: 400 }}>
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
                     <TableCell>Month</TableCell>
-                    <TableCell>Payment</TableCell>
-                    <TableCell>Principal</TableCell>
-                    <TableCell>Interest</TableCell>
-                    <TableCell>Balance</TableCell>
+                    <TableCell>Payment ({selectedCurrency})</TableCell>
+                    <TableCell>Principal ({selectedCurrency})</TableCell>
+                    <TableCell>Interest ({selectedCurrency})</TableCell>
+                    <TableCell>Balance ({selectedCurrency})</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -221,10 +271,10 @@ function Home() {
                       }}
                     >
                       <TableCell>{row.month}</TableCell>
-                      <TableCell>${row.payment}</TableCell>
-                      <TableCell>${row.principal}</TableCell>
-                      <TableCell>${row.interest}</TableCell>
-                      <TableCell>${row.balance}</TableCell>
+                      <TableCell>{convertToCurrency(row.payment)}</TableCell>
+                      <TableCell>{convertToCurrency(row.principal)}</TableCell>
+                      <TableCell>{convertToCurrency(row.interest)}</TableCell>
+                      <TableCell>{convertToCurrency(row.balance)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
