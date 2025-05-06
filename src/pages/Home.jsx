@@ -7,6 +7,12 @@ import {
   Grid,
   Paper,
   Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@mui/material';
 
 function Home() {
@@ -18,8 +24,10 @@ function Home() {
   const [emi, setEmi] = useState(null);
   const [totalInterest, setTotalInterest] = useState(null);
   const [totalAmount, setTotalAmount] = useState(null);
+  // State for amortization schedule
+  const [amortizationSchedule, setAmortizationSchedule] = useState([]);
 
-  // Handle form submission to calculate EMI
+  // Calculate EMI and amortization schedule
   const calculateEmi = () => {
     const principal = parseFloat(loanAmount);
     const annualRate = parseFloat(interestRate);
@@ -29,6 +37,7 @@ function Home() {
       setEmi(null);
       setTotalInterest(null);
       setTotalAmount(null);
+      setAmortizationSchedule([]);
       return;
     }
 
@@ -44,6 +53,24 @@ function Home() {
     setEmi(emiValue.toFixed(2));
     setTotalInterest(totalInterestValue.toFixed(2));
     setTotalAmount(totalPayment.toFixed(2));
+
+    // Calculate amortization schedule
+    let balance = principal;
+    const schedule = [];
+    for (let month = 1; month <= months; month++) {
+      const interestForMonth = balance * monthlyRate;
+      const principalForMonth = emiValue - interestForMonth;
+      balance -= principalForMonth;
+
+      schedule.push({
+        month,
+        payment: emiValue.toFixed(2),
+        principal: principalForMonth.toFixed(2),
+        interest: interestForMonth.toFixed(2),
+        balance: balance > 0 ? balance.toFixed(2) : '0.00',
+      });
+    }
+    setAmortizationSchedule(schedule);
   };
 
   // Handle form submission on button click
@@ -127,6 +154,41 @@ function Home() {
             )}
           </Paper>
         </Grid>
+
+        {/* Amortization Schedule */}
+        {amortizationSchedule.length > 0 && (
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3, mt: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Amortization Schedule
+              </Typography>
+              <TableContainer sx={{ maxHeight: 400 }}>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Month</TableCell>
+                      <TableCell>Payment</TableCell>
+                      <TableCell>Principal</TableCell>
+                      <TableCell>Interest</TableCell>
+                      <TableCell>Balance</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {amortizationSchedule.map((row) => (
+                      <TableRow key={row.month}>
+                        <TableCell>{row.month}</TableCell>
+                        <TableCell>${row.payment}</TableCell>
+                        <TableCell>${row.principal}</TableCell>
+                        <TableCell>${row.interest}</TableCell>
+                        <TableCell>${row.balance}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Grid>
+        )}
       </Grid>
     </Container>
   );
