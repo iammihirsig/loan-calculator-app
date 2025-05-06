@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { ThemeContextProvider } from './context/ThemeContext';
 import { fetchExchangeRates } from './services/api';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -38,12 +38,12 @@ function App() {
           <ErrorBoundary>
             <Header />
             <Routes>
-              <Route path="/loan-calculator-app/home" element={<Home />} />
-              <Route path="/loan-calculator-app/about" element={<About />} />
-              <Route path="/loan-calculator-app/error" element={<Error />} />
-              <Route path="/loan-calculator-app/rates" element={<Rates />} />
-              {/* Wildcard fallback for any invalid path under the base */}
-              <Route path="/loan-calculator-app/*" element={<Error />} />
+              <Route path="/" element={<Navigate to="/home" replace />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/error" element={<Error />} />
+              <Route path="/rates" element={<Rates />} />
+              <Route path="*" element={<Error />} />
             </Routes>
           </ErrorBoundary>
         </Router>
